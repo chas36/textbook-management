@@ -1,27 +1,31 @@
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.core.config import settings
 
-# Асинхронный движок
-engine = create_async_engine(
+# Синхронный движок для SQLite
+engine = create_engine(
     settings.DATABASE_URL,
     echo=True,
+    connect_args={"check_same_thread": False}  # Для SQLite
 )
 
 # Фабрика сессий
-AsyncSessionLocal = sessionmaker(
-    engine, class_=AsyncSession, expire_on_commit=False
-)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 # Базовая модель
 Base = declarative_base()
 
 
-async def get_db():
+def get_db():
     """Dependency для получения сессии БД"""
-    async with AsyncSessionLocal() as session:
-        try:
-            yield session
-        finally:
-            await session.close()
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
+def create_tables():
+    """Создание всех таблиц"""
+    Base.metadata.create_all(bind=engine)

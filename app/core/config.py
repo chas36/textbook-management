@@ -5,7 +5,7 @@ from pydantic_settings import BaseSettings
 
 class Settings(BaseSettings):
     # Database
-    DATABASE_URL: str = "sqlite+aiosqlite:///./textbook_management.db"
+    DATABASE_URL: str = "sqlite:///./textbook_management.db"
     
     # JWT
     SECRET_KEY: str = "your-secret-key-change-in-production"

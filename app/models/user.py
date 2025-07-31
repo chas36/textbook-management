@@ -3,9 +3,10 @@ from sqlalchemy.sql import func
 from app.core.database import Base
 from typing import Optional
 from datetime import datetime
+import enum
 
 
-class UserRole(str, Enum):
+class UserRole(str, enum.Enum):
     TEACHER = "teacher"
     STUDENT = "student"
 

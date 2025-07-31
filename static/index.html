@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Система управления учебниками</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1><i class="fas fa-book"></i> Система управления учебниками</h1>
+                <div class="user-info">
+                    <span id="currentUser">Учитель</span>
+                    <button id="logoutBtn" class="btn btn-secondary">
+                        <i class="fas fa-sign-out-alt"></i> Выйти
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="sidebar">
+            <div class="nav-section">
+                <h3><i class="fas fa-users"></i> Ученики</h3>
+                <ul>
+                    <li><a href="#" data-section="students" class="nav-link active">
+                        <i class="fas fa-list"></i> Список учеников
+                    </a></li>
+                    <li><a href="#" data-section="student-accounts" class="nav-link">
+                        <i class="fas fa-user-plus"></i> Аккаунты учеников
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3><i class="fas fa-book-open"></i> Учебники</h3>
+                <ul>
+                    <li><a href="#" data-section="textbooks" class="nav-link">
+                        <i class="fas fa-list"></i> Список учебников
+                    </a></li>
+                    <li><a href="#" data-section="qr-codes" class="nav-link">
+                        <i class="fas fa-qrcode"></i> QR коды
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3><i class="fas fa-exchange-alt"></i> Транзакции</h3>
+                <ul>
+                    <li><a href="#" data-section="transactions" class="nav-link">
+                        <i class="fas fa-history"></i> История
+                    </a></li>
+                    <li><a href="#" data-section="bulk-operations" class="nav-link">
+                        <i class="fas fa-layer-group"></i> Массовые операции
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3><i class="fas fa-exclamation-triangle"></i> Отчеты</h3>
+                <ul>
+                    <li><a href="#" data-section="damage-reports" class="nav-link">
+                        <i class="fas fa-tools"></i> Повреждения
+                    </a></li>
+                    <li><a href="#" data-section="found-reports" class="nav-link">
+                        <i class="fas fa-search"></i> Найденные
+                    </a></li>
+                    <li><a href="#" data-section="reports" class="nav-link">
+                        <i class="fas fa-chart-bar"></i> Статистика
+                    </a></li>
+                </ul>
+            </div>
+
+            <div class="nav-section">
+                <h3><i class="fas fa-robot"></i> Бот</h3>
+                <ul>
+                    <li><a href="#" data-section="bot-management" class="nav-link">
+                        <i class="fas fa-cog"></i> Управление
+                    </a></li>
+                    <li><a href="#" data-section="notifications" class="nav-link">
+                        <i class="fas fa-bell"></i> Уведомления
+                    </a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Login Section -->
+            <div id="loginSection" class="section active">
+                <div class="login-container">
+                    <h2><i class="fas fa-sign-in-alt"></i> Вход в систему</h2>
+                    <form id="loginForm" class="login-form">
+                        <div class="form-group">
+                            <label for="username">Имя пользователя:</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Пароль:</label>
+                            <input type="password" id="password" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-sign-in-alt"></i> Войти
+                        </button>
+                    </form>
+                    <div id="loginError" class="error-message" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Dashboard Section -->
+            <div id="dashboardSection" class="section">
+                <div class="dashboard">
+                    <h2><i class="fas fa-tachometer-alt"></i> Панель управления</h2>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalStudents">0</h3>
+                                <p>Учеников</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-book"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="totalTextbooks">0</h3>
+                                <p>Учебников</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exchange-alt"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="activeTransactions">0</h3>
+                                <p>Выдано</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div class="stat-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="stat-content">
+                                <h3 id="pendingReports">0</h3>
+                                <p>Отчетов</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h3>Быстрые действия</h3>
+                        <div class="action-buttons">
+                            <button class="btn btn-primary" onclick="showSection('students')">
+                                <i class="fas fa-user-plus"></i> Добавить ученика
+                            </button>
+                            <button class="btn btn-primary" onclick="showSection('textbooks')">
+                                <i class="fas fa-book-medical"></i> Добавить учебник
+                            </button>
+                            <button class="btn btn-success" onclick="showSection('bulk-operations')">
+                                <i class="fas fa-layer-group"></i> Массовая выдача
+                            </button>
+                            <button class="btn btn-info" onclick="showSection('reports')">
+                                <i class="fas fa-chart-bar"></i> Отчеты
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Students Section -->
+            <div id="studentsSection" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> Управление учениками</h2>
+                    <button class="btn btn-primary" onclick="showAddStudentModal()">
+                        <i class="fas fa-plus"></i> Добавить ученика
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <input type="text" id="studentSearch" placeholder="Поиск по имени..." class="search-input">
+                    <select id="gradeFilter" class="filter-select">
+                        <option value="">Все классы</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table id="studentsTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ФИО</th>
+                                <th>Класс</th>
+                                <th>Телефон</th>
+                                <th>Телефон родителя</th>
+                                <th>Аккаунт</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentsTableBody">
+                            <!-- Данные будут загружены динамически -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Textbooks Section -->
+            <div id="textbooksSection" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-book"></i> Управление учебниками</h2>
+                    <button class="btn btn-primary" onclick="showAddTextbookModal()">
+                        <i class="fas fa-plus"></i> Добавить учебник
+                    </button>
+                </div>
+                
+                <div class="filters">
+                    <input type="text" id="textbookSearch" placeholder="Поиск по названию..." class="search-input">
+                    <select id="subjectFilter" class="filter-select">
+                        <option value="">Все предметы</option>
+                    </select>
+                </div>
+
+                <div class="table-container">
+                    <table id="textbooksTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>QR код</th>
+                                <th>Предмет</th>
+                                <th>Название</th>
+                                <th>Автор</th>
+                                <th>Год</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="textbooksTableBody">
+                            <!-- Данные будут загружены динамически -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Transactions Section -->
+            <div id="transactionsSection" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-exchange-alt"></i> История транзакций</h2>
+                </div>
+                
+                <div class="filters">
+                    <select id="transactionTypeFilter" class="filter-select">
+                        <option value="">Все типы</option>
+                        <option value="issue">Выдача</option>
+                        <option value="return">Возврат</option>
+                    </select>
+                    <input type="date" id="dateFilter" class="filter-input">
+                </div>
+
+                <div class="table-container">
+                    <table id="transactionsTable" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Тип</th>
+                                <th>Ученик</th>
+                                <th>Учебник</th>
+                                <th>Дата</th>
+                                <th>Статус</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <!-- Данные будут загружены динамически -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reports Section -->
+            <div id="reportsSection" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-bar"></i> Отчеты и статистика</h2>
+                </div>
+                
+                <div class="reports-grid">
+                    <div class="report-card">
+                        <h3>Отчет по выданным учебникам</h3>
+                        <button class="btn btn-primary" onclick="generateIssueReport()">
+                            <i class="fas fa-download"></i> Скачать отчет
+                        </button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>Отчет по несдавшим учебники</h3>
+                        <button class="btn btn-warning" onclick="generateNotReturnedReport()">
+                            <i class="fas fa-download"></i> Скачать отчет
+                        </button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>Отчет по повреждениям</h3>
+                        <button class="btn btn-danger" onclick="generateDamageReport()">
+                            <i class="fas fa-download"></i> Скачать отчет
+                        </button>
+                    </div>
+                    
+                    <div class="report-card">
+                        <h3>Массовые уведомления</h3>
+                        <button class="btn btn-info" onclick="showBulkNotificationsModal()">
+                            <i class="fas fa-bell"></i> Отправить уведомления
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bot Management Section -->
+            <div id="botManagementSection" class="section">
+                <div class="section-header">
+                    <h2><i class="fas fa-robot"></i> Управление ботом</h2>
+                    <button class="btn btn-primary" onclick="testBotConnection()">
+                        <i class="fas fa-plug"></i> Тест подключения
+                    </button>
+                </div>
+                
+                <div class="bot-status">
+                    <div class="status-card">
+                        <h3>Статус бота</h3>
+                        <div id="botStatus" class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span class="status-text">Проверка...</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bot-actions">
+                    <h3>Действия с ботом</h3>
+                    <div class="action-buttons">
+                        <button class="btn btn-primary" onclick="getBotInfo()">
+                            <i class="fas fa-info-circle"></i> Информация о боте
+                        </button>
+                        <button class="btn btn-secondary" onclick="showSendMessageModal()">
+                            <i class="fas fa-paper-plane"></i> Отправить сообщение
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modalOverlay" class="modal-overlay" style="display: none;">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">Модальное окно</h3>
+                <button class="modal-close" onclick="closeModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Содержимое модального окна -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html> 

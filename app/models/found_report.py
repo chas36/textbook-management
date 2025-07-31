@@ -1,13 +1,12 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, Enum, ForeignKey
 from sqlalchemy.sql import func
-from sqlalchemy.orm import relationship
 from app.core.database import Base
+import enum
 
 
-class FoundStatus(str, Enum):
+class FoundStatus(str, enum.Enum):
     FOUND = "found"           # Найден
     RETURNED = "returned"     # Возвращен
-    VERIFIED = "verified"     # Проверен
 
 
 class FoundReport(Base):
@@ -15,28 +14,21 @@ class FoundReport(Base):
     
     id = Column(Integer, primary_key=True, index=True)
     textbook_id = Column(Integer, ForeignKey("textbooks.id"), nullable=False)
-    finder_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # Кто нашел
-    
-    finder_type = Column(String, nullable=False)  # "student" или "teacher"
-    location = Column(Text)  # Где найдено
-    notes = Column(Text)     # Дополнительные заметки
+    found_location = Column(String, nullable=False)  # Где найдено
+    description = Column(Text)  # Описание находки
+    photos = Column(Text)  # JSON строка с путями к фото
     
     status = Column(Enum(FoundStatus), default=FoundStatus.FOUND)
+    notes = Column(Text)  # Дополнительные заметки
+    
+    reported_by = Column(Integer, ForeignKey("users.id"), nullable=False)  # Кто сообщил
+    returned_by = Column(Integer, ForeignKey("users.id"), nullable=True)  # Кто вернул
+    
+    found_at = Column(DateTime(timezone=True), server_default=func.now())
+    returned_at = Column(DateTime(timezone=True), nullable=True)
     
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
     
-    # Связи
-    textbook = relationship("Textbook", back_populates="found_reports")
-    finder = relationship("User", back_populates="found_reports")
-    
     def __repr__(self):
         return f"<FoundReport(id={self.id}, status='{self.status}')>"
-
-
-# Добавим обратные связи
-from app.models.textbook import Textbook
-from app.models.user import User
-
-Textbook.found_reports = relationship("FoundReport", back_populates="textbook")
-User.found_reports = relationship("FoundReport", back_populates="finder")
