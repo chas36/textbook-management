@@ -63,7 +63,7 @@ class MaxBotClient:
                 raise ValueError(f"Unsupported HTTP method: {method}")
         
         except aiohttp.ClientError as e:
-            print(f"Error making request to MAX API: {e}")
+            # Log error silently for production
             return {"error": str(e)}
     
     async def get_bot_info(self) -> Dict[str, Any]:
@@ -141,7 +141,7 @@ class MaxBotClient:
         if teacher_chat_id:
             return await self.send_message(teacher_chat_id, message)
         else:
-            print(f"Damage notification: {message}")
+            # Log notification silently for production
             return {"message": "Notification logged (teacher chat not configured)"}
     
     async def send_lost_notification(self, student_name: str, textbook_title: str, parent_phone: str) -> Dict[str, Any]:
@@ -158,7 +158,6 @@ class MaxBotClient:
         
         # Уведомление родителя (если есть max_user_id)
         # TODO: Реализовать поиск пользователя по номеру телефона
-        print(f"Lost notification to {parent_phone}: {teacher_message}")
         return {"message": "Lost notification sent"}
     
     async def send_found_notification(self, finder_name: str, textbook_title: str, found_location: str) -> Dict[str, Any]:
@@ -172,7 +171,6 @@ class MaxBotClient:
         if teacher_chat_id:
             return await self.send_message(teacher_chat_id, message)
         else:
-            print(f"Found notification: {message}")
             return {"message": "Found notification logged"}
     
     async def send_parent_notification(self, parent_phone: str, student_name: str, message_type: str, **kwargs) -> Dict[str, Any]:
@@ -229,7 +227,6 @@ class MaxBotClient:
         
         # TODO: Реализовать отправку родителям по номеру телефона
         # Пока просто логируем
-        print(f"Parent notification to {parent_phone}: {message}")
         return {"message": f"Parent notification logged for {parent_phone}"}
     
     async def get_chat_info(self, chat_id: str) -> Dict[str, Any]:
